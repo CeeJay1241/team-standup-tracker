@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships TeamMembership[]
+  standups    StandupEntry[]
+
+  @@index([clerkId])
+}
+
+model Team {
+  id              String   @id @default(cuid())
+  name            String
+  deadlineHour    Int      @default(10)
+  deadlineMinute  Int      @default(0)
+  timezone        String   @default("America/New_York")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  members  TeamMembership[]
+  standups StandupEntry[]
+  invites  TeamInvite[]
+}
+
+model TeamMembership {
+  id     String         @id @default(cuid())
+  role   MembershipRole @default(MEMBER)
+  joinedAt DateTime     @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+  @@index([teamId])
+}
+
+model StandupEntry {
+  id        String   @id @default(cuid())
+  date      DateTime @db.Date
+  yesterday String
+  today     String
+  blockers  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId, date])
+  @@index([teamId, date])
+  @@index([userId, date])
+}
+
+model TeamInvite {
+  id        String       @id @default(cuid())
+  email     String
+  status    InviteStatus @default(PENDING)
+  createdAt DateTime     @default(now())
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([email, teamId])
+  @@index([email])
+}
+
+enum MembershipRole {
+  ADMIN
+  MEMBER
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+}
