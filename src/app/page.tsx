@@ -2,9 +2,13 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import DemoFeed from "@/components/DemoFeed";
 import DemoStandupForm from "@/components/DemoStandupForm";
+import { redirect } from "next/navigation";
 
 export default async function HomePage() {
   const { userId } = await auth();
+  if (userId) {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="min-h-screen">
@@ -51,14 +55,14 @@ export default async function HomePage() {
         </p>
       </div>
 
-      {/* Demo feed */}
-      <div className="max-w-5xl mx-auto px-4 pb-8">
-        <DemoFeed />
+      {/* Try it sandbox */}
+      <div className="max-w-xl mx-auto px-4 pb-8">
+        <DemoStandupForm />
       </div>
 
-      {/* Try it sandbox */}
-      <div className="max-w-xl mx-auto px-4 pb-16">
-        <DemoStandupForm />
+      {/* Demo feed */}
+      <div className="max-w-5xl mx-auto px-4 pb-16">
+        <DemoFeed />
       </div>
     </div>
   );
