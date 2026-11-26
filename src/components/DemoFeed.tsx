@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from "react";
 import StandupCard from "./StandupCard";
+import StreakBadge from "./StreakBadge";
+import Link from "next/link";
 
 type Member = {
   id: string;
   role: string;
   hasPostedToday: boolean;
+  streak: number;
+  userId: string;
   user: { id: string; name: string | null; email: string; imageUrl: string | null };
 };
 
@@ -105,19 +109,24 @@ export default function DemoFeed() {
             {data.members.map((m) => {
               const name = m.user.name || m.user.email;
               return (
-                <div key={m.id} className="flex items-center justify-between py-1.5">
+                <Link
+                  href={`/demo/member/${m.user.id}`}
+                  key={m.id}
+                  className="flex items-center justify-between py-1.5 hover:bg-gray-50 rounded px-1 -mx-1 transition"
+                >
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-medium text-blue-700">
                       {name.charAt(0)}
                     </div>
                     <span className="text-sm">{name}</span>
+                    {m.streak > 1 && <StreakBadge streak={m.streak} />}
                   </div>
                   {m.hasPostedToday ? (
                     <span className="text-xs text-green-600 font-medium">✓ Posted</span>
                   ) : (
                     <span className="text-xs text-red-500 font-medium">✗ Missing</span>
                   )}
-                </div>
+                </Link>
               );
             })}
           </div>
