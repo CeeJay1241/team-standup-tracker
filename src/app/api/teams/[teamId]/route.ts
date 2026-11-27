@@ -62,7 +62,7 @@ export async function PATCH(
   const user = await getDbUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const isAdmin = await requireAdmin(user.id, teamId);
+  const isAdmin = await requireAdmin(user.id);
   if (!isAdmin) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const { name, deadlineHour, deadlineMinute, timezone } = await req.json();
