@@ -10,7 +10,7 @@ export default function Navbar() {
         <Link href="/dashboard" className="font-semibold text-lg">
           Standup Tracker
         </Link>
-        <UserButton afterSignOutUrl="/" />
+        <UserButton />
       </div>
     </nav>
   );
