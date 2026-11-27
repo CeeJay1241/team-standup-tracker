@@ -13,7 +13,7 @@ export default async function SettingsPage({
   const user = await getDbUser();
   if (!user) redirect("/sign-in");
 
-  const isAdmin = await requireAdmin(user.id, teamId);
+  const isAdmin = await requireAdmin(teamId);
   if (!isAdmin) redirect(`/team/${teamId}`);
 
   const team = await prisma.team.findUnique({

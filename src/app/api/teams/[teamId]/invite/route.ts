@@ -11,7 +11,7 @@ export async function POST(
   const user = await getDbUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const isAdmin = await requireAdmin(user.id);
+  const isAdmin = await requireAdmin(teamId);
   if (!isAdmin) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const { email } = await req.json();
@@ -64,7 +64,7 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
 
-  const isAdmin = await requireAdmin(user.id);
+  const isAdmin = await requireAdmin(teamId);
   if (!isAdmin) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const invites = await prisma.teamInvite.findMany({

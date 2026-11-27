@@ -11,7 +11,7 @@ export async function GET(
   const user = await getDbUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const membership = await getUserMembership(user.id);
+  const membership = await getUserMembership(teamId);
   if (!membership) return NextResponse.json({ error: "Not a member" }, { status: 403 });
 
   const { searchParams } = new URL(req.url);

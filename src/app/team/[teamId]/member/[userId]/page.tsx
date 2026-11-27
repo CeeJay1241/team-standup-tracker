@@ -14,7 +14,7 @@ export default async function MemberTimelinePage({
   const user = await getDbUser();
   if (!user) redirect("/sign-in");
 
-  const membership = await getUserMembership(user.id, teamId);
+  const membership = await getUserMembership(teamId);
   if (!membership) redirect("/dashboard");
 
   const member = await prisma.user.findUnique({
