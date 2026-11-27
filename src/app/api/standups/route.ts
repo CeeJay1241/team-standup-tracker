@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const membership = await getUserMembership(user.id, teamId);
+  const membership = await getUserMembership(user.id);
   if (!membership) return NextResponse.json({ error: "Not a member" }, { status: 403 });
 
   const todayDate = new Date();
